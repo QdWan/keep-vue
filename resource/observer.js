@@ -8,7 +8,10 @@ class Dep {
   // 收集依赖
   depend () {
     if (window.target) {
-      this.addSub(window.target)
+      if (!this.subs.find(x => window.target === x)) {
+        this.addSub(window.target)
+      }
+      
     }
   }
   notify (newVal, val) {
@@ -17,7 +20,6 @@ class Dep {
       sub.update(newVal, val)
     }
   }
-  update () {}
   remove (sub) {
     if (this.subs.length) {
       const idx = this.subs.indexOf(sub)
@@ -28,7 +30,10 @@ class Dep {
   }
 }
 function defineReactive (obj, k, v) {
-  let dep = new Dep()
+  if (typeof v === 'object') {
+    new Observer(v)
+  }
+  const dep = new Dep()
   Object.defineProperty(obj, k, {
     enumerable: true,
     configurable: true,
@@ -41,8 +46,23 @@ function defineReactive (obj, k, v) {
       if (newVal == v) {
         return
       }
-      dep.notify(newVal, val)
+      dep.notify(newVal, v)
       val = newVal
+      
     }
   })
+}
+
+class Observer {
+  constructor(value) {
+    this.value = value
+    if (!Array.isArray(value)) {
+      this.walk(value)
+    }
+  }
+  walk (obj) {
+    for(let k in obj) {
+      defineReactive(obj, k, obj[k])
+    }
+  }
 }

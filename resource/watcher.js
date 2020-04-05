@@ -1,22 +1,25 @@
 class Watcher {
-  constructor(vm, expOrFn, cb) {
+  constructor(vm, expOrFn, cb, id) {
+    this.id = id || 0
     this.vm = vm
     this.cb = cb
     this.getter = parsePath(expOrFn)
     this.value = this.get()
   }
+
   get () {
     window.target = this
     const value = this.getter.call(this.vm, this.vm)
     window.target = undefined
     return value
   }
-  update () {
+  update (value) {
     const oldValue = this.value
-    const value = this.get()
     this.cb.call(this.vm, value, oldValue)
+    this.value = value
   }
 }
+
 function parsePath (path) {
   const paths = path.split('.')
   return function(obj) {
@@ -27,5 +30,3 @@ function parsePath (path) {
     return obj
   }
 }
-
-module.exports = Watcher
