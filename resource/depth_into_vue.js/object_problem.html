@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue Object Reactive</title>
+  
+</head>
+<body>
+  <div id="app">
+  </div>
+<script src="https://cdn.staticfile.org/vue/2.6.11/vue.js"></script>
+<script type="x-template" id="template">
+  <div class="profile">
+    {{ profile.basic.name}}
+    {{ extra.action }}
+  </div>
+</script>
+<script>
+new Vue({
+  el: '#app',
+  template: "#template",
+  data () {
+    return { profile: {}, extra: { action: 'swim' } }
+  },
+  beforeMount () {
+    this.init()
+    delete this.extra.action
+  },
+  methods: {
+    init () {
+      this.profile.basic = {}
+      this.profile.basic.name = 'jt'
+    }
+  }
+})
+</script>
+</body>
+</html>

@@ -10,16 +10,17 @@
   <script src="./watcher.js"></script>
   <script>
 
-var a = {b: 'hello world'}
+var a = {b: ['hello world']}
 const observer = new Observer(a)
 const watcher = new Watcher(window, 'a.b', function(newVal, oldVal) {
   if (newVal !== oldVal) {
     console.log('watcher updated', newVal, oldVal)
   }
 })
-a.b = 'hello world122'
-a.b = 'hello world123'
-// console.log(window.a.b)
+a.b = ['hello world2']
+a.b = ['hello world123']
+a.b.push({name: 'hello world'}, {name: 'change world'})
+a.b.splice(0,0, {name: 'insert queue'})
   </script>
 </body>
 </html>
